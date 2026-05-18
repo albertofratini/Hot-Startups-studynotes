@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hot Startups to Watch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #F2EDE6;
+    --bg2:       #EBE5DC;
+    --ink:       #1A1714;
+    --ink-mid:   #6B6460;
+    --ink-light: #A39E9A;
+    --accent:    #C4602A;
+    --accent2:   #8B3A18;
+    --rule:      #D4CEC7;
+    --card-bg:   #E8E2D9;
+    --serif:     'Playfair Display', Georgia, serif;
+    --sans:      'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Page wrapper ── */
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .cover-eyebrow {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 32px;
+  }
+
+  .cover-title {
+    font-family: var(--serif);
+    font-size: clamp(48px, 8vw, 82px);
+    font-weight: 600;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .cover-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .cover-rule {
+    width: 48px;
+    height: 2px;
+    background: var(--accent);
+    margin: 28px 0;
+  }
+
+  .cover-sub {
+    font-size: 16px;
+    color: var(--ink-mid);
+    max-width: 420px;
+    line-height: 1.65;
+    margin-bottom: 60px;
+  }
+
+  /* ── TOC ── */
+  .toc {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--rule);
+  }
+
+  .toc-item {
+    padding: 16px 20px;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    cursor: default;
+    transition: background 0.2s;
+  }
+  .toc-item:nth-child(2n) { border-right: none; }
+  .toc-item:nth-child(3), .toc-item:nth-child(4) { border-bottom: none; }
+  .toc-item:hover { background: var(--card-bg); }
+
+  .toc-num {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .toc-name {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .toc-tag {
+    font-size: 11px;
+    color: var(--ink-light);
+  }
+
+  /* ── Section divider ── */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 80px 0 48px;
+  }
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .section-num {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  /* ── Startup block ── */
+  .startup {
+    margin-bottom: 0;
+  }
+
+  .startup-header {
+    margin-bottom: 36px;
+  }
+
+  .startup-name {
+    font-family: var(--serif);
+    font-size: clamp(36px, 6vw, 54px);
+    font-weight: 600;
+    line-height: 1.0;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .startup-tagline {
+    font-size: 13px;
+    color: var(--ink-light);
+    font-style: italic;
+  }
+
+  .startup-what {
+    font-size: 15px;
+    color: var(--ink-mid);
+    line-height: 1.7;
+    border-left: 2px solid var(--accent);
+    padding-left: 20px;
+    margin-bottom: 40px;
+  }
+
+  /* ── Insights ── */
+  .insights {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-bottom: 36px;
+  }
+
+  .insight-label {
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .insight-body {
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.72;
+    font-weight: 300;
+  }
+
+  /* ── Takeaway ── */
+  .takeaway {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    padding: 22px 26px;
+    margin-bottom: 0;
+    position: relative;
+  }
+
+  .takeaway::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+  }
+
+  .takeaway-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .takeaway-text {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* ── Closing ── */
+  .closing {
+    margin-top: 80px;
+    padding-top: 60px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .closing-title {
+    font-family: var(--serif);
+    font-size: clamp(28px, 4vw, 38px);
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 48px;
+  }
+
+  .thread {
+    margin-bottom: 32px;
+    display: grid;
+    grid-template-columns: 3px 1fr;
+    gap: 20px;
+  }
+
+  .thread-bar {
+    background: var(--rule);
+    border-radius: 2px;
+    margin-top: 2px;
+  }
+
+  .thread-head {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .thread-body {
+    font-size: 14px;
+    color: var(--ink-mid);
+    line-height: 1.7;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-text {
+    font-size: 11px;
+    color: var(--ink-light);
+    letter-spacing: 0.5px;
+  }
+
+  .footer-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  /* ── Animations ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media print {
+    .cover { min-height: auto; page-break-after: always; }
+    .startup { page-break-inside: avoid; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Cover -->
+  <header class="cover">
+    <p class="cover-eyebrow">Study Notes · As a 24yo working in VC</p>
+    <h1 class="cover-title">Hot Startups<br>to <em>Watch</em></h1>
+    <div class="cover-rule"></div>
+    <p class="cover-sub">Four companies worth understanding — each doing something structurally interesting.</p>
+
+    <div class="toc">
+      <div class="toc-item">
+        <div class="toc-num">01</div>
+        <div class="toc-name">Oishii</div>
+        <div class="toc-tag">Vertical farming · US</div>
+      </div>
+      <div class="toc-item">
+        <div class="toc-num">02</div>
+        <div class="toc-name">Forgis</div>
+        <div class="toc-tag">Industrial AI · Switzerland</div>
+      </div>
+      <div class="toc-item">
+        <div class="toc-num">03</div>
+        <div class="toc-name">Legora</div>
+        <div class="toc-tag">Legal AI · Sweden</div>
+      </div>
+      <div class="toc-item">
+        <div class="toc-num">04</div>
+        <div class="toc-name">Manufact</div>
+        <div class="toc-tag">Dev infrastructure · YC S25</div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- 01 Oishii -->
+  <section class="startup fade-in">
+    <div class="section-divider"><span class="section-num">01</span></div>
+    <div class="startup-header">
+      <h2 class="startup-name">Oishii</h2>
+      <p class="startup-tagline">Vertical farming · United States</p>
+    </div>
+    <p class="startup-what">Indoor strawberry farm using Japanese cultivation methods. Their product — the Omakase Berry — retails at $5 per strawberry.</p>
+    <div class="insights">
+      <div class="insight fade-in">
+        <p class="insight-label">Luxury logic in a commodity market</p>
+        <p class="insight-body">By borrowing from the Japanese concept of omakase, Oishii reframed a commodity as an experience. The pricing, the scarcity, the presentation — all borrowed from the luxury goods playbook and dropped into a category that had never seen it. The strawberry became an object of desire rather than a unit of produce.</p>
+      </div>
+      <div class="insight fade-in">
+        <p class="insight-label">Controlled environment as a product feature</p>
+        <p class="insight-body">Indoor vertical farms can dial in light cycles, humidity, CO₂ levels — variables outdoor farming never controls consistently. For flavour-focused products, that reproducibility is the product itself. The strawberry is identical every single time. That predictability is what justifies a premium and enables a direct-to-chef or direct-to-retailer relationship.</p>
+      </div>
+    </div>
+    <div class="takeaway fade-in">
+      <p class="takeaway-label">Key Takeaway</p>
+      <p class="takeaway-text">Repositioning who you're competing with often matters more than competing harder. Oishii opted out of the commodity race and created a different game entirely.</p>
+    </div>
+  </section>
+
+
+  <!-- 02 Forgis -->
+  <section class="startup fade-in">
+    <div class="section-divider"><span class="section-num">02</span></div>
+    <div class="startup-header">
+      <h2 class="startup-name">Forgis</h2>
+      <p class="startup-tagline">Industrial AI · Switzerland</p>
+    </div>
+    <p class="startup-what">A one-stop platform for designing, automating and optimising manufacturing production lines — targeting Western factories being priced out by cheaper overseas labour.</p>
+    <div class="insights">
+      <div class="insight fade-in">
+        <p class="insight-label">The reindustrialisation tailwind</p>
+        <p class="insight-body">Western manufacturing has a structural cost problem, and offshoring is increasingly risky — geopolitics, supply chain fragility, ESG pressure are all pushing back. Governments across Europe and the US are actively incentivising domestic production. That's not just a market; it's a customer with a political mandate to spend.</p>
+      </div>
+      <div class="insight fade-in">
+        <p class="insight-label">Selling intelligence, not tooling</p>
+        <p class="insight-body">Earlier waves of manufacturing software sold execution tools — CAD, ERP, MES. Forgis positions as the system that decides, not just the system that executes. That shifts the buyer profile toward C-suite and changes the pricing conversation from seat-based to value-based.</p>
+      </div>
+    </div>
+    <div class="takeaway fade-in">
+      <p class="takeaway-label">Key Takeaway</p>
+      <p class="takeaway-text">Some of the best bets in deep tech right now are boring, critical industries that haven't been touched by modern software and suddenly have a reason to change.</p>
+    </div>
+  </section>
+
+
+  <!-- 03 Legora -->
+  <section class="startup fade-in">
+    <div class="section-divider"><span class="section-num">03</span></div>
+    <div class="startup-header">
+      <h2 class="startup-name">Legora</h2>
+      <p class="startup-tagline">Legal AI · Sweden</p>
+    </div>
+    <p class="startup-what">Collaborative AI platform built for law firms — handles research, drafting, and document review. Positioned as infrastructure for how legal work gets done, with security and audit trails baked in from day one.</p>
+    <div class="insights">
+      <div class="insight fade-in">
+        <p class="insight-label">Vertical depth over horizontal reach</p>
+        <p class="insight-body">General-purpose AI exists. Lawyers use it, then stop, because the output isn't trustworthy enough for actual legal work. Legora's bet is on deep vertical specificity — domain-trained models, citation trails, and compliance architecture — in a market with very high willingness to pay precisely because errors carry real consequences.</p>
+      </div>
+      <div class="insight fade-in">
+        <p class="insight-label">Trust as the core product</p>
+        <p class="insight-body">In legal, being wrong costs clients and bar standing. Speed is a secondary benefit. Legora sells trusted output — a tool lawyers can put their name behind. Every security and audit-trail feature on their site is answering the same question: can I stake my professional reputation on this?</p>
+      </div>
+    </div>
+    <div class="takeaway fade-in">
+      <p class="takeaway-label">Key Takeaway</p>
+      <p class="takeaway-text">In high-stakes professional services, the adoption bar is "I'll stake my reputation on this." Build for that bar.</p>
+    </div>
+  </section>
+
+
+  <!-- 04 Manufact -->
+  <section class="startup fade-in">
+    <div class="section-divider"><span class="section-num">04</span></div>
+    <div class="startup-header">
+      <h2 class="startup-name">Manufact <span style="font-size:0.55em; color:var(--ink-light); font-family:var(--sans); font-weight:400;">YC S25</span></h2>
+      <p class="startup-tagline">Developer infrastructure · United States</p>
+    </div>
+    <p class="startup-what">Fullstack SDK to build and deploy MCP apps for ChatGPT and Claude. If a tool you use connects natively to an AI assistant, there's a decent chance Manufact is the plumbing underneath.</p>
+    <div class="insights">
+      <div class="insight fade-in">
+        <p class="insight-label">Infrastructure compounds quietly</p>
+        <p class="insight-body">Every major platform wave produces infrastructure companies that end up more durable than the applications built on top — Stripe, Twilio, Segment. MCP is becoming the standard protocol for AI-tool connectivity, and Manufact is building the developer layer before anyone else locks it in. The moat is ecosystem adoption, not code.</p>
+      </div>
+      <div class="insight fade-in">
+        <p class="insight-label">Protocol-stage timing</p>
+        <p class="insight-body">MCP is still early. Most developers haven't heard of it. But the teams building the next generation of AI-native products will need exactly what Manufact offers. Getting in at protocol-formation stage — before competing SDKs proliferate — is the kind of timing that looks obvious later.</p>
+      </div>
+    </div>
+    <div class="takeaway fade-in">
+      <p class="takeaway-label">Key Takeaway</p>
+      <p class="takeaway-text">Watch what protocols are forming, not just what products are launching. The company that owns the plumbing of a new tech stack tends to win quietly and completely.</p>
+    </div>
+  </section>
+
+
+  <!-- Closing -->
+  <section class="closing fade-in">
+    <h2 class="closing-title">What ties<br>these four together</h2>
+
+    <div class="thread">
+      <div class="thread-bar"></div>
+      <div>
+        <p class="thread-head">Each one bet on a structural shift, not a trend.</p>
+        <p class="thread-body">Reindustrialisation, luxury repositioning, AI in professional services, protocol formation — none of these are hype cycles. They're slow-moving structural changes that create durable markets.</p>
+      </div>
+    </div>
+
+    <div class="thread">
+      <div class="thread-bar"></div>
+      <div>
+        <p class="thread-head">The "why now" is unusually clear in each case.</p>
+        <p class="thread-body">Geopolitics forcing manufacturing home. LLMs making vertical AI viable overnight. MCP becoming a standard. Good startups often succeed because the world moved toward them.</p>
+      </div>
+    </div>
+
+    <div class="thread">
+      <div class="thread-bar"></div>
+      <div>
+        <p class="thread-head">The positioning is defined by what they chose to be, not by the competition.</p>
+        <p class="thread-body">Oishii is a luxury object. Forgis is industrial intelligence. Legora is trusted output. Manufact is foundational plumbing. All four built an identity that doesn't require a comparison to make sense.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span class="footer-text">Hot Startups to Watch · As a 24yo working in VC</span>
+    <div class="footer-dot"></div>
+  </footer>
+
+</div>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
