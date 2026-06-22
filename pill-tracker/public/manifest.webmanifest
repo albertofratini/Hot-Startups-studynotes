@@ -1,0 +1,14 @@
+{
+  "name": "Pill Buddy",
+  "short_name": "Pill Buddy",
+  "description": "A cute daily pill tracker with WhatsApp reminders and a friendly mascot.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFF4F8",
+  "theme_color": "#FF9FB6",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -3,8 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#ffd9e6">
+<meta name="theme-color" content="#FF9FB6">
 <title>My Pill Buddy 💊</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pill Buddy">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -103,6 +109,14 @@
     <span id="streak-text">🔥 0 day streak</span>
   </section>
 
+  <!-- Cycle status (shown when cycle tracking is on) -->
+  <section id="cycle-card" class="cycle-card hidden">
+    <span id="cycle-text">—</span>
+  </section>
+
+  <!-- Install prompt (Android/Chrome) -->
+  <button id="install-btn" class="install-btn hidden">📲 Add to home screen</button>
+
   <!-- Calendar -->
   <section class="cal-card">
     <div class="cal-head">
@@ -118,6 +132,7 @@
       <span><i class="dot taken"></i> Taken</span>
       <span><i class="dot missed"></i> Missed</span>
       <span><i class="dot free"></i> Pill-free</span>
+      <span><i class="dot period"></i> Period</span>
     </div>
     <p class="cal-hint">Tap a day to mark it as a <b>pill-free</b> (break) day 🌿</p>
   </section>
@@ -134,6 +149,23 @@
     <label>Her WhatsApp number<input id="set-her" type="tel" placeholder="+39 333 1234567"></label>
     <label>Your WhatsApp number<input id="set-partner" type="tel" placeholder="+39 333 7654321"></label>
     <p class="modal-hint">Reminders are sent at pill time, then +1h, +6h, +10h — to both of you — until she ticks it. Numbers must include the country code (e.g. +39…).</p>
+
+    <div class="set-section">
+      <label class="row"><input id="set-alert-on" type="checkbox"> <span>Missed-pill alert just to you</span></label>
+      <label>Send it at<input id="set-alert-time" type="time"></label>
+      <p class="modal-hint">If she still hasn't taken her pill by this time (and it isn't a break day), you'll get a private "she hasn't taken it" alert — only to your number.</p>
+    </div>
+
+    <div class="set-section">
+      <label class="row"><input id="set-cycle-on" type="checkbox"> <span>Cycle / period tracking</span></label>
+      <label>Pack start date (first active pill)<input id="set-cycle-start" type="date"></label>
+      <div class="set-grid">
+        <label>Active days<input id="set-cycle-active" type="number" min="1" max="40" placeholder="21"></label>
+        <label>Break days<input id="set-cycle-break" type="number" min="0" max="14" placeholder="7"></label>
+      </div>
+      <p class="modal-hint">The calendar will auto-mark break days (no pill 🌿) and show when her period is expected 🩸. Most combined pills are 21 active + 7 break; some are 24 + 4.</p>
+    </div>
+
     <div class="modal-actions">
       <button id="set-cancel" class="ghost">Cancel</button>
       <button id="set-save">Save</button>

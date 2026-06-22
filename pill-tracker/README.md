@@ -26,6 +26,16 @@ then **+1h, +6h, and +10h** until she ticks it off.
 
   …and a confirmation to both of you when she ticks it. Nothing is sent on
   break days or once she's taken it.
+- **Missed-pill alert (just to you)** — a separate private nudge sent **only to
+  your number** if she still hasn't ticked her pill by a time you choose (e.g.
+  22:30). Toggle it on/off and set the time in Settings.
+- **Cycle / period tracking** — enter her pack start date and pattern (e.g. 21
+  active + 7 break) and the app auto-marks her break days 🌿 and shows when her
+  **period is expected** 🩸, plus a "day X of 28" status. No reminders go out on
+  break days.
+- **Installable (PWA)** — she can add it to her home screen so it opens like a
+  real app (works offline for the shell, with an "Add to home screen" button on
+  Android and via Share → Add to Home Screen on iOS).
 
 ---
 
@@ -86,6 +96,8 @@ the server), or pre-fill defaults in `.env`:
 | Timezone | e.g. `Europe/Rome` (IANA name) |
 | Her WhatsApp number | With country code, e.g. `+39…` |
 | Your WhatsApp number | With country code |
+| Missed-pill alert | On/off + time — private nudge sent only to your number |
+| Cycle tracking | On/off + pack start date + active/break day counts |
 | `APP_PASSCODE` (.env only) | Optional secret code to open the app |
 
 ---
@@ -116,7 +128,11 @@ can text to your girlfriend. Set an `APP_PASSCODE` so it stays just for you two.
 
 - `server.js` — Express API + static file server + a `node-cron` job (runs every
   minute) that sends the WhatsApp reminders via Twilio.
-- `public/` — the frontend (vanilla HTML/CSS/JS, mascot is an inline SVG).
+- `public/` — the frontend (vanilla HTML/CSS/JS, mascot is an inline SVG) plus
+  the PWA bits: `manifest.webmanifest`, `sw.js` (offline app shell), and `icons/`.
+- `scripts/generate-icons.mjs` — regenerates the PNG app icons with zero deps
+  (`node scripts/generate-icons.mjs`). Already committed, so you only need this
+  if you want to tweak the icon.
 - `data/db.json` — created at runtime; stores settings, taken days, and
   pill-free days.
 

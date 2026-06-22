@@ -56,13 +56,47 @@ async function refresh() {
 }
 
 function dose(date) { return state.doses[date]; }
-function isPillFree(date) { return state.pillFree.includes(date); }
+
+// Cycle math (mirrors the server). Returns null if disabled/unset.
+function cycleInfo(date) {
+  const c = state.settings.cycle;
+  if (!c?.enabled || !c.packStart) return null;
+  const len = (Number(c.activeDays) || 0) + (Number(c.breakDays) || 0);
+  if (len <= 0) return null;
+  let idx = daysBetween(c.packStart, date) % len;
+  if (idx < 0) idx += len;
+  const isBreak = idx >= Number(c.activeDays);
+  return { dayInCycle: idx + 1, cycleLength: len, isBreak, activeLeft: isBreak ? 0 : Number(c.activeDays) - idx };
+}
+function isCycleBreak(date) { return cycleInfo(date)?.isBreak === true; }
+function isManualFree(date) { return state.pillFree.includes(date); }
+function isPillFree(date) { return isManualFree(date) || isCycleBreak(date); }
+
+function daysBetween(fromStr, toStr) {
+  const [y1, m1, d1] = fromStr.split('-').map(Number);
+  const [y2, m2, d2] = toStr.split('-').map(Number);
+  return Math.round((Date.UTC(y2, m2 - 1, d2) - Date.UTC(y1, m1 - 1, d1)) / 86400000);
+}
 
 function render() {
   renderStatus();
   renderMascot();
   renderStreak();
+  renderCycle();
   renderCalendar();
+}
+
+function renderCycle() {
+  const card = $('cycle-card');
+  const info = cycleInfo(state.today);
+  if (!info) { card.classList.add('hidden'); return; }
+  card.classList.remove('hidden');
+  card.classList.toggle('period', info.isBreak);
+  if (info.isBreak) {
+    $('cycle-text').textContent = `🩸 Break day ${info.dayInCycle - (Number(state.settings.cycle.activeDays))} · period expected · day ${info.dayInCycle} of ${info.cycleLength}`;
+  } else {
+    $('cycle-text').textContent = `💊 Active pill day ${info.dayInCycle} of ${info.cycleLength} · ${info.activeLeft} day${info.activeLeft === 1 ? '' : 's'} until break`;
+  }
 }
 
 function renderStatus() {
@@ -162,8 +196,10 @@ function renderCalendar() {
     cell.textContent = d;
 
     if (key === state.today) cell.classList.add('today');
-    if (isPillFree(key)) {
-      cell.classList.add('free');
+    if (isCycleBreak(key)) {
+      cell.classList.add('period');      // cycle break day = period expected 🩸
+    } else if (isManualFree(key)) {
+      cell.classList.add('free');        // manually marked pill-free 🌿
     } else if (dose(key)?.taken) {
       cell.classList.add('taken');
     } else if (key < state.today) {
@@ -206,6 +242,17 @@ function openSettings() {
   $('set-tz').value = state.settings.timezone || '';
   $('set-her').value = state.settings.herNumber || '';
   $('set-partner').value = state.settings.partnerNumber || '';
+
+  const alert = state.settings.partnerAlert || {};
+  $('set-alert-on').checked = !!alert.enabled;
+  $('set-alert-time').value = alert.time || '22:30';
+
+  const cycle = state.settings.cycle || {};
+  $('set-cycle-on').checked = !!cycle.enabled;
+  $('set-cycle-start').value = cycle.packStart || '';
+  $('set-cycle-active').value = cycle.activeDays ?? 21;
+  $('set-cycle-break').value = cycle.breakDays ?? 7;
+
   $('settings-modal').classList.remove('hidden');
 }
 
@@ -216,6 +263,16 @@ async function saveSettings() {
     timezone: $('set-tz').value.trim(),
     herNumber: $('set-her').value.replace(/\s/g, ''),
     partnerNumber: $('set-partner').value.replace(/\s/g, ''),
+    partnerAlert: {
+      enabled: $('set-alert-on').checked,
+      time: $('set-alert-time').value || '22:30',
+    },
+    cycle: {
+      enabled: $('set-cycle-on').checked,
+      packStart: $('set-cycle-start').value,
+      activeDays: Number($('set-cycle-active').value) || 21,
+      breakDays: Number($('set-cycle-break').value) || 7,
+    },
   };
   state = await api('/api/settings', 'POST', payload);
   $('settings-modal').classList.add('hidden');
@@ -243,5 +300,30 @@ function stepMonth(delta) {
   calMonth = { year, month };
   renderCalendar();
 }
+
+// ---------------------------------------------------------------------------
+// PWA: service worker + install prompt
+// ---------------------------------------------------------------------------
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch((e) => console.warn('SW failed', e));
+  });
+}
+
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = $('install-btn');
+  if (!btn) return;
+  btn.classList.remove('hidden');
+  btn.onclick = async () => {
+    btn.classList.add('hidden');
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  };
+});
+window.addEventListener('appinstalled', () => $('install-btn')?.classList.add('hidden'));
 
 initGate();
