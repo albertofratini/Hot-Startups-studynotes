@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffd9e6">
+<title>My Pill Buddy 💊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Passcode gate -->
+<div id="gate" class="gate hidden">
+  <div class="gate-card">
+    <h2>Hi cutie 💕</h2>
+    <p>Enter your secret code to continue</p>
+    <input id="gate-input" type="password" inputmode="numeric" placeholder="••••" autocomplete="off">
+    <button id="gate-btn">Let me in</button>
+    <p id="gate-error" class="gate-error hidden">Hmm, that's not it — try again 🙈</p>
+  </div>
+</div>
+
+<main id="app" class="app hidden">
+
+  <header class="topbar">
+    <span class="logo">💊 Pill Buddy</span>
+    <button id="settings-btn" class="icon-btn" title="Settings">⚙️</button>
+  </header>
+
+  <!-- Mascot -->
+  <section class="mascot-area">
+    <div id="mascot" class="mascot">
+      <!-- Cute blonde, green-eyed mascot -->
+      <svg viewBox="0 0 220 240" width="200" height="218" xmlns="http://www.w3.org/2000/svg" aria-label="Your pill buddy">
+        <defs>
+          <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#FFE08A"/>
+            <stop offset="1" stop-color="#F6C453"/>
+          </linearGradient>
+          <radialGradient id="cheek" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#FF9FB6"/>
+            <stop offset="1" stop-color="#FF9FB6" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- back hair -->
+        <path d="M40 120 C20 60 60 18 110 18 C160 18 200 60 180 120 C176 175 170 205 150 220 L70 220 C50 205 44 175 40 120 Z" fill="url(#hair)"/>
+        <!-- face -->
+        <ellipse cx="110" cy="120" rx="62" ry="66" fill="#FFE7D3"/>
+        <!-- fringe / bangs -->
+        <path d="M52 96 C50 52 86 30 110 30 C134 30 170 52 168 96 C150 78 138 72 110 72 C82 72 70 78 52 96 Z" fill="url(#hair)"/>
+        <path d="M110 30 C92 30 70 42 60 70 C70 60 90 56 110 56 C130 56 150 60 160 70 C150 42 128 30 110 30 Z" fill="#FFDF7E"/>
+
+        <!-- eyebrows -->
+        <path id="brow-l" d="M78 98 q12 -8 24 -2" stroke="#D9A23B" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path id="brow-r" d="M118 96 q12 -6 24 2" stroke="#D9A23B" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+        <!-- eyes (green) -->
+        <g class="eyes">
+          <ellipse cx="90" cy="118" rx="13" ry="15" fill="#fff"/>
+          <ellipse cx="130" cy="118" rx="13" ry="15" fill="#fff"/>
+          <circle cx="91" cy="120" r="9" fill="#3FB562"/>
+          <circle cx="131" cy="120" r="9" fill="#3FB562"/>
+          <circle cx="91" cy="120" r="4.5" fill="#1f3d24"/>
+          <circle cx="131" cy="120" r="4.5" fill="#1f3d24"/>
+          <circle cx="94" cy="116" r="2.2" fill="#fff"/>
+          <circle cx="134" cy="116" r="2.2" fill="#fff"/>
+        </g>
+
+        <!-- cheeks -->
+        <ellipse cx="72" cy="140" rx="11" ry="8" fill="url(#cheek)"/>
+        <ellipse cx="148" cy="140" rx="11" ry="8" fill="url(#cheek)"/>
+
+        <!-- mouth -->
+        <path id="mouth" d="M96 150 q14 16 28 0" stroke="#D26A7E" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+        <!-- little flower clip -->
+        <g transform="translate(150 70)">
+          <circle r="6" fill="#FF9FB6"/>
+          <circle cx="-9" r="6" fill="#FFC2D1"/>
+          <circle cx="9" r="6" fill="#FFC2D1"/>
+          <circle cy="-9" r="6" fill="#FFC2D1"/>
+          <circle cy="9" r="6" fill="#FFC2D1"/>
+          <circle r="4" fill="#FFE08A"/>
+        </g>
+      </svg>
+    </div>
+    <div id="speech" class="speech">Loading…</div>
+  </section>
+
+  <!-- Today's status -->
+  <section class="status-card">
+    <p id="status-line" class="status-line">—</p>
+    <button id="take-btn" class="take-btn">I took my pill 💊</button>
+    <button id="undo-btn" class="undo-btn hidden">Undo (I didn't actually)</button>
+    <p id="pillfree-note" class="pillfree-note hidden">🌿 Today is a pill-free day — relax, no pill needed!</p>
+  </section>
+
+  <!-- Streak -->
+  <section class="streak">
+    <span id="streak-text">🔥 0 day streak</span>
+  </section>
+
+  <!-- Calendar -->
+  <section class="cal-card">
+    <div class="cal-head">
+      <button id="cal-prev" class="icon-btn">‹</button>
+      <h3 id="cal-title">Month</h3>
+      <button id="cal-next" class="icon-btn">›</button>
+    </div>
+    <div class="cal-weekdays">
+      <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+    </div>
+    <div id="cal-grid" class="cal-grid"></div>
+    <div class="cal-legend">
+      <span><i class="dot taken"></i> Taken</span>
+      <span><i class="dot missed"></i> Missed</span>
+      <span><i class="dot free"></i> Pill-free</span>
+    </div>
+    <p class="cal-hint">Tap a day to mark it as a <b>pill-free</b> (break) day 🌿</p>
+  </section>
+
+</main>
+
+<!-- Settings modal -->
+<div id="settings-modal" class="modal hidden">
+  <div class="modal-card">
+    <h3>Settings ⚙️</h3>
+    <label>Her name<input id="set-name" type="text" placeholder="e.g. Sofia"></label>
+    <label>Pill time (when she takes it)<input id="set-time" type="time"></label>
+    <label>Timezone<input id="set-tz" type="text" placeholder="Europe/Rome"></label>
+    <label>Her WhatsApp number<input id="set-her" type="tel" placeholder="+39 333 1234567"></label>
+    <label>Your WhatsApp number<input id="set-partner" type="tel" placeholder="+39 333 7654321"></label>
+    <p class="modal-hint">Reminders are sent at pill time, then +1h, +6h, +10h — to both of you — until she ticks it. Numbers must include the country code (e.g. +39…).</p>
+    <div class="modal-actions">
+      <button id="set-cancel" class="ghost">Cancel</button>
+      <button id="set-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
