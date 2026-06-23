@@ -300,8 +300,9 @@ app.get('/api/needs-passcode', (req, res) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`💊 Pill tracker running on http://localhost:${PORT}`);
+const HOST = process.env.HOST || '0.0.0.0';
+app.listen(PORT, HOST, () => {
+  console.log(`💊 Pill tracker running on http://${HOST}:${PORT}`);
   console.log(`   Timezone: ${db.settings.timezone} | Pill time: ${db.settings.pillTime}`);
   console.log(`   WhatsApp: ${twilioClient ? 'Twilio enabled' : 'DEV mode (logging to console)'}`);
 });
