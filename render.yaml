@@ -1,0 +1,40 @@
+# Render Blueprint for Pill Buddy.
+# Render auto-detects this file. In Render: New + -> Blueprint -> pick this repo,
+# then fill in the secret env vars (the ones marked "sync: false") in the UI.
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: pill-buddy
+    runtime: node
+    rootDir: pill-tracker
+    plan: starter            # always-on so reminders keep firing. See README for the free option.
+    branch: main
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/state
+    autoDeploy: true
+    # Persistent storage so her history survives redeploys (paid plans only).
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DATA_DIR
+        value: /data
+      - key: TIMEZONE
+        value: Europe/Rome
+      - key: PILL_TIME
+        value: "21:00"
+      - key: TWILIO_WHATSAPP_FROM
+        value: whatsapp:+14155238886
+      # Secrets — set these in the Render dashboard (never commit real values):
+      - key: APP_PASSCODE
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: HER_WHATSAPP
+        sync: false
+      - key: PARTNER_WHATSAPP
+        sync: false

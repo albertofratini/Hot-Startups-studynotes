@@ -104,12 +104,18 @@ the server), or pre-fill defaults in `.env`:
 
 ## Deploying so you can share a link
 
-The app is a tiny Node server, so any host that runs Node works. Easiest options:
+The app is a tiny Node server, so any host that runs Node works.
 
-- **[Render](https://render.com)** — New → Web Service → connect this repo →
-  Root Directory `pill-tracker`, Build `npm install`, Start `npm start`. Add the
-  `.env` values as Environment Variables.
-- **[Railway](https://railway.app)** / **[Fly.io](https://fly.io)** — same idea.
+**Easiest — Render Blueprint (one click-ish):** this repo ships a `render.yaml`
+at the root. In [Render](https://render.com): **New + → Blueprint → pick this
+repo**. It pre-fills the build/start commands, the persistent disk, and the
+env-var slots — you just paste in the secret values (Twilio keys, the two phone
+numbers, and `APP_PASSCODE`).
+
+**Manual (any host):** New → Web Service → connect this repo → Root Directory
+`pill-tracker`, Build `npm install`, Start `npm start`, then add the `.env`
+values as Environment Variables. [Railway](https://railway.app) and
+[Fly.io](https://fly.io) work the same way.
 
 After it deploys you'll get a URL (e.g. `https://pill-buddy.onrender.com`) you
 can text to your girlfriend. Set an `APP_PASSCODE` so it stays just for you two.
@@ -121,6 +127,25 @@ can text to your girlfriend. Set an `APP_PASSCODE` so it stays just for you two.
 > **Note on reminders:** reminders are sent by a scheduler running inside the
 > server, so the server must stay running (use a host that doesn't sleep, or a
 > paid "always-on" tier).
+
+### Running it on Render's free tier (and keeping it awake)
+
+The `render.yaml` defaults to the paid **starter** plan because it's always-on
+(best for reliable reminders) and because persistent disks require a paid plan.
+To run free instead:
+
+1. In `render.yaml` set `plan: free` and delete the `disk:` block and the
+   `DATA_DIR` env var (free instances have no persistent disk, so her history
+   resets whenever the app redeploys — fine for trying it out).
+2. Free instances **sleep after ~15 minutes of inactivity**, which pauses the
+   reminder scheduler. Keep it awake with a free external pinger:
+   - Create a monitor at [cron-job.org](https://cron-job.org) (or
+     [UptimeRobot](https://uptimerobot.com)) that requests
+     `https://your-app.onrender.com/api/state` every **10 minutes**.
+   - That steady traffic keeps the instance up so reminders fire on time.
+
+> This is a workaround. For something she relies on daily, the always-on starter
+> plan (a few dollars/month) is more dependable and keeps her history.
 
 ---
 
