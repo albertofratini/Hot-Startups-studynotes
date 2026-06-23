@@ -17,15 +17,20 @@ const DATA_FILE = path.join(DATA_DIR, 'db.json');
 
 const DEFAULT_DB = {
   settings: {
-    herName: process.env.HER_NAME || 'love',
-    pillTime: process.env.PILL_TIME || '21:00',        // HH:mm, when she takes it
-    timezone: process.env.TIMEZONE || 'Europe/Rome',
+    herName: process.env.HER_NAME || 'Basia',
+    pillTime: process.env.PILL_TIME || '21:30',        // HH:mm, when she takes it
+    timezone: process.env.TIMEZONE || 'Europe/Paris',
+    // Clock times (HH:mm) when reminders go to BOTH of you, until she ticks it.
+    // A time earlier than the pill time fires the next morning (e.g. 09:00).
+    reminderTimes: (process.env.REMINDER_TIMES || '22:00,23:00,09:00')
+      .split(',').map(s => s.trim()).filter(Boolean),
     herNumber: process.env.HER_WHATSAPP || '',          // e.g. +393331234567
     partnerNumber: process.env.PARTNER_WHATSAPP || '',  // your number
-    // Missed-pill alert sent ONLY to the partner (you), if not taken by `time`.
+    // Extra missed-pill alert sent ONLY to the partner (you), if not taken by
+    // `time`. Off by default since the reminders above already include you.
     partnerAlert: {
-      enabled: true,
-      time: process.env.PARTNER_ALERT_TIME || '22:30',  // HH:mm
+      enabled: process.env.PARTNER_ALERT_ENABLED === '1',
+      time: process.env.PARTNER_ALERT_TIME || '23:30',  // HH:mm
     },
     // Cycle / period tracking. When enabled, break days are auto-derived from
     // the pack start date and are treated as pill-free + expected-period days.
@@ -146,49 +151,50 @@ function notifyBoth(body, { includePartner = true } = {}) {
 // ---------------------------------------------------------------------------
 // Reminder scheduler
 // ---------------------------------------------------------------------------
-// Offsets in minutes after the configured pill time.
-const OFFSETS = [
-  { mins: 0,   her: name => `💊 Hey ${name}! It's pill o'clock. Time to take your pill — your little buddy is cheering for you! 🌼`,
-               partner: name => `💊 Reminder sent: it's ${name}'s pill time now.` },
-  { mins: 60,  her: name => `⏰ Gentle nudge, ${name} — it's been an hour. Have you taken your pill yet? Tap "I took it" when you do 💚`,
-               partner: name => `⏰ ${name} hasn't ticked her pill yet (1h after pill time).` },
-  { mins: 360, her: name => `🌙 ${name}, just checking in — your pill is still waiting for you. You've got this! 💛`,
-               partner: name => `🌙 Heads up: ${name} still hasn't logged her pill (6h after).` },
-  { mins: 600, her: name => `🚨 Last reminder of the day, ${name} — please don't forget your pill! 💊💚`,
-               partner: name => `🚨 ${name} still hasn't taken her pill (10h after pill time).` },
-];
-
-function parsePillMinutes(pillTime) {
-  const [h, m] = pillTime.split(':').map(Number);
-  return h * 60 + m;
+// Reminder messages escalate in tone with each successive reminder.
+function herReminderMsg(name, idx, total) {
+  const gentle = `⏰ Gentle nudge, ${name} — have you taken your pill yet? Tap "I took it" when you do 💚`;
+  const middle = `🌙 ${name}, your pill is still waiting for you. You've got this! 💛`;
+  const urgent = `🚨 Last reminder, ${name} — please don't forget your pill! 💊💚`;
+  if (idx === total - 1) return urgent;
+  if (idx === 0) return gentle;
+  return middle;
 }
+function partnerReminderMsg(name, idx, total) {
+  if (idx === total - 1) return `🚨 ${name} still hasn't logged her pill — final reminder just sent.`;
+  return `⏰ Reminder sent to ${name} — she still hasn't ticked her pill.`;
+}
+
+function parseClockMinutes(t) {
+  const [h, m] = String(t).split(':').map(Number);
+  return (h || 0) * 60 + (m || 0);
+}
+const parsePillMinutes = parseClockMinutes; // alias used by the partner alert below
 
 function tick() {
   const { timezone, pillTime, herName } = db.settings;
   const now = nowParts(timezone);
-  const base = parsePillMinutes(pillTime);
+  const base = parseClockMinutes(pillTime);
+  const times = Array.isArray(db.settings.reminderTimes) ? db.settings.reminderTimes : [];
 
-  for (const offset of OFFSETS) {
-    const total = base + offset.mins;
-    const fireMinute = total % 1440;
-    const doseDate = total >= 1440 ? shiftDate(now.date, -1) : now.date;
+  times.forEach((t, idx) => {
+    const fireMinute = parseClockMinutes(t);
+    // A reminder at/after pill time belongs to that evening's dose; one earlier
+    // than pill time (e.g. 09:00) fires the next morning for the previous dose.
+    const doseDate = fireMinute >= base ? now.date : shiftDate(now.date, -1);
 
-    if (now.minutes !== fireMinute) continue;
-
-    // Skip pill-free days
-    if (isPillFreeDay(doseDate)) continue;
-    // Skip if already taken
-    if (db.doses[doseDate]?.taken) continue;
-    // De-dupe: only send each offset once per dose date
+    if (now.minutes !== fireMinute) return;
+    if (isPillFreeDay(doseDate)) return;          // skip break days
+    if (db.doses[doseDate]?.taken) return;        // skip once taken
     const sent = (db.sentReminders[doseDate] ||= {});
-    if (sent[offset.mins]) continue;
-    sent[offset.mins] = true;
+    if (sent[t]) return;                          // de-dupe per dose date
+    sent[t] = true;
     saveDb(db);
 
-    sendWhatsApp(db.settings.herNumber, offset.her(herName));
-    sendWhatsApp(db.settings.partnerNumber, offset.partner(herName));
-    console.log(`[reminder] offset ${offset.mins}m for dose ${doseDate}`);
-  }
+    sendWhatsApp(db.settings.herNumber, herReminderMsg(herName, idx, times.length));
+    sendWhatsApp(db.settings.partnerNumber, partnerReminderMsg(herName, idx, times.length));
+    console.log(`[reminder] ${t} for dose ${doseDate}`);
+  });
 
   // Missed-pill alert — sent ONLY to the partner.
   const alert = db.settings.partnerAlert;
@@ -224,6 +230,7 @@ function publicState() {
       herName: db.settings.herName,
       pillTime: db.settings.pillTime,
       timezone: db.settings.timezone,
+      reminderTimes: db.settings.reminderTimes,
       herNumber: db.settings.herNumber,
       partnerNumber: db.settings.partnerNumber,
       partnerAlert: db.settings.partnerAlert,
@@ -269,6 +276,13 @@ app.post('/api/settings', (req, res) => {
   const allowed = ['herName', 'pillTime', 'timezone', 'herNumber', 'partnerNumber'];
   for (const key of allowed) {
     if (req.body?.[key] !== undefined) db.settings[key] = req.body[key];
+  }
+  if (req.body?.reminderTimes !== undefined) {
+    const rt = req.body.reminderTimes;
+    const list = Array.isArray(rt) ? rt : String(rt).split(',');
+    db.settings.reminderTimes = list
+      .map(s => String(s).trim())
+      .filter(s => /^\d{1,2}:\d{2}$/.test(s));
   }
   if (req.body?.partnerAlert) {
     db.settings.partnerAlert = { ...db.settings.partnerAlert, ...req.body.partnerAlert };

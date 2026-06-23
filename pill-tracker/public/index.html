@@ -143,12 +143,13 @@
 <div id="settings-modal" class="modal hidden">
   <div class="modal-card">
     <h3>Settings ⚙️</h3>
-    <label>Her name<input id="set-name" type="text" placeholder="e.g. Sofia"></label>
+    <label>Her name<input id="set-name" type="text" placeholder="e.g. Basia"></label>
     <label>Pill time (when she takes it)<input id="set-time" type="time"></label>
-    <label>Timezone<input id="set-tz" type="text" placeholder="Europe/Rome"></label>
-    <label>Her WhatsApp number<input id="set-her" type="tel" placeholder="+39 333 1234567"></label>
-    <label>Your WhatsApp number<input id="set-partner" type="tel" placeholder="+39 333 7654321"></label>
-    <p class="modal-hint">Reminders are sent at pill time, then +1h, +6h, +10h — to both of you — until she ticks it. Numbers must include the country code (e.g. +39…).</p>
+    <label>Reminder times<input id="set-reminders" type="text" placeholder="22:00, 23:00, 09:00"></label>
+    <label>Timezone<input id="set-tz" type="text" placeholder="Europe/Paris"></label>
+    <label>Her WhatsApp number<input id="set-her" type="tel" placeholder="+33 6 12 34 56 78"></label>
+    <label>Your WhatsApp number<input id="set-partner" type="tel" placeholder="+33 6 87 65 43 21"></label>
+    <p class="modal-hint">Reminders go to <b>both of you</b> at the times above (comma-separated, 24-hour clock) until she ticks it. A time earlier than the pill time is treated as the next morning. Numbers need the country code (e.g. +33…).</p>
 
     <div class="set-section">
       <label class="row"><input id="set-alert-on" type="checkbox"> <span>Missed-pill alert just to you</span></label>

@@ -238,7 +238,8 @@ async function togglePillFree(date) {
 // ---------------------------------------------------------------------------
 function openSettings() {
   $('set-name').value = state.settings.herName || '';
-  $('set-time').value = state.settings.pillTime || '21:00';
+  $('set-time').value = state.settings.pillTime || '21:30';
+  $('set-reminders').value = (state.settings.reminderTimes || []).join(', ');
   $('set-tz').value = state.settings.timezone || '';
   $('set-her').value = state.settings.herNumber || '';
   $('set-partner').value = state.settings.partnerNumber || '';
@@ -260,6 +261,7 @@ async function saveSettings() {
   const payload = {
     herName: $('set-name').value.trim(),
     pillTime: $('set-time').value,
+    reminderTimes: $('set-reminders').value,
     timezone: $('set-tz').value.trim(),
     herNumber: $('set-her').value.replace(/\s/g, ''),
     partnerNumber: $('set-partner').value.replace(/\s/g, ''),
