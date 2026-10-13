@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#FF9FB6">
-<title>My Pill Buddy 💊</title>
+<meta name="theme-color" content="#FBF4F1">
+<title>Pill Buddy</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -12,7 +12,8 @@
 <meta name="apple-mobile-web-app-title" content="Pill Buddy">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -20,93 +21,84 @@
 <!-- Passcode gate -->
 <div id="gate" class="gate hidden">
   <div class="gate-card">
-    <h2>Hi cutie 💕</h2>
-    <p>Enter your secret code to continue</p>
+    <h2>Just for us</h2>
+    <p>Enter your code to come in.</p>
     <input id="gate-input" type="password" inputmode="numeric" placeholder="••••" autocomplete="off">
-    <button id="gate-btn">Let me in</button>
-    <p id="gate-error" class="gate-error hidden">Hmm, that's not it — try again 🙈</p>
+    <button id="gate-btn">Open</button>
+    <p id="gate-error" class="gate-error hidden">That code didn't match. Try again.</p>
   </div>
 </div>
 
 <main id="app" class="app hidden">
 
   <header class="topbar">
-    <span class="logo">💊 Pill Buddy</span>
-    <button id="settings-btn" class="icon-btn" title="Settings">⚙️</button>
+    <span class="logo"><span class="logo-pill" aria-hidden="true"></span>Pill Buddy</span>
+    <button id="settings-btn" class="icon-btn" title="Settings" aria-label="Settings">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H2a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 3.6 8a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H8a1.65 1.65 0 0 0 1-1.51V2a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V8a1.65 1.65 0 0 0 1.51 1H22a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
   </header>
 
-  <!-- Mascot -->
-  <section class="mascot-area">
+  <!-- Hero: mascot + a word from her -->
+  <section class="hero">
     <div id="mascot" class="mascot">
-      <!-- Cute blonde, green-eyed mascot -->
-      <svg viewBox="0 0 220 240" width="200" height="218" xmlns="http://www.w3.org/2000/svg" aria-label="Your pill buddy">
+      <svg viewBox="0 0 220 240" width="184" height="200" xmlns="http://www.w3.org/2000/svg" aria-label="Your pill buddy">
         <defs>
           <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#FFE08A"/>
-            <stop offset="1" stop-color="#F6C453"/>
+            <stop offset="0" stop-color="#F6D98C"/>
+            <stop offset="1" stop-color="#EBBF63"/>
           </linearGradient>
           <radialGradient id="cheek" cx="0.5" cy="0.5" r="0.5">
-            <stop offset="0" stop-color="#FF9FB6"/>
-            <stop offset="1" stop-color="#FF9FB6" stop-opacity="0"/>
+            <stop offset="0" stop-color="#EE8FA6"/>
+            <stop offset="1" stop-color="#EE8FA6" stop-opacity="0"/>
           </radialGradient>
         </defs>
-
         <!-- back hair -->
         <path d="M40 120 C20 60 60 18 110 18 C160 18 200 60 180 120 C176 175 170 205 150 220 L70 220 C50 205 44 175 40 120 Z" fill="url(#hair)"/>
         <!-- face -->
-        <ellipse cx="110" cy="120" rx="62" ry="66" fill="#FFE7D3"/>
+        <ellipse cx="110" cy="120" rx="62" ry="66" fill="#FBE4D2"/>
         <!-- fringe / bangs -->
         <path d="M52 96 C50 52 86 30 110 30 C134 30 170 52 168 96 C150 78 138 72 110 72 C82 72 70 78 52 96 Z" fill="url(#hair)"/>
-        <path d="M110 30 C92 30 70 42 60 70 C70 60 90 56 110 56 C130 56 150 60 160 70 C150 42 128 30 110 30 Z" fill="#FFDF7E"/>
-
+        <path d="M110 30 C92 30 70 42 60 70 C70 60 90 56 110 56 C130 56 150 60 160 70 C150 42 128 30 110 30 Z" fill="#F2CF78"/>
         <!-- eyebrows -->
-        <path id="brow-l" d="M78 98 q12 -8 24 -2" stroke="#D9A23B" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path id="brow-r" d="M118 96 q12 -6 24 2" stroke="#D9A23B" stroke-width="4" fill="none" stroke-linecap="round"/>
-
+        <path d="M78 98 q12 -8 24 -2" stroke="#CF9A3C" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M118 96 q12 -6 24 2" stroke="#CF9A3C" stroke-width="4" fill="none" stroke-linecap="round"/>
         <!-- eyes (green) -->
         <g class="eyes">
           <ellipse cx="90" cy="118" rx="13" ry="15" fill="#fff"/>
           <ellipse cx="130" cy="118" rx="13" ry="15" fill="#fff"/>
-          <circle cx="91" cy="120" r="9" fill="#3FB562"/>
-          <circle cx="131" cy="120" r="9" fill="#3FB562"/>
-          <circle cx="91" cy="120" r="4.5" fill="#1f3d24"/>
-          <circle cx="131" cy="120" r="4.5" fill="#1f3d24"/>
+          <circle cx="91" cy="120" r="9" fill="#4F9E6B"/>
+          <circle cx="131" cy="120" r="9" fill="#4F9E6B"/>
+          <circle cx="91" cy="120" r="4.5" fill="#22402C"/>
+          <circle cx="131" cy="120" r="4.5" fill="#22402C"/>
           <circle cx="94" cy="116" r="2.2" fill="#fff"/>
           <circle cx="134" cy="116" r="2.2" fill="#fff"/>
         </g>
-
         <!-- cheeks -->
         <ellipse cx="72" cy="140" rx="11" ry="8" fill="url(#cheek)"/>
         <ellipse cx="148" cy="140" rx="11" ry="8" fill="url(#cheek)"/>
-
         <!-- mouth -->
-        <path id="mouth" d="M96 150 q14 16 28 0" stroke="#D26A7E" stroke-width="4" fill="none" stroke-linecap="round"/>
-
-        <!-- little flower clip -->
+        <path d="M96 150 q14 16 28 0" stroke="#B54B66" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <!-- flower clip -->
         <g transform="translate(150 70)">
-          <circle r="6" fill="#FF9FB6"/>
-          <circle cx="-9" r="6" fill="#FFC2D1"/>
-          <circle cx="9" r="6" fill="#FFC2D1"/>
-          <circle cy="-9" r="6" fill="#FFC2D1"/>
-          <circle cy="9" r="6" fill="#FFC2D1"/>
-          <circle r="4" fill="#FFE08A"/>
+          <circle r="6" fill="#EE8FA6"/>
+          <circle cx="-9" r="6" fill="#F6B9C8"/>
+          <circle cx="9" r="6" fill="#F6B9C8"/>
+          <circle cy="-9" r="6" fill="#F6B9C8"/>
+          <circle cy="9" r="6" fill="#F6B9C8"/>
+          <circle r="4" fill="#6FB183"/>
         </g>
       </svg>
     </div>
-    <div id="speech" class="speech">Loading…</div>
+    <p id="speech" class="speech">One moment…</p>
   </section>
 
-  <!-- Today's status -->
-  <section class="status-card">
-    <p id="status-line" class="status-line">—</p>
-    <button id="take-btn" class="take-btn">I took my pill 💊</button>
-    <button id="undo-btn" class="undo-btn hidden">Undo (I didn't actually)</button>
-    <p id="pillfree-note" class="pillfree-note hidden">🌿 Today is a pill-free day — relax, no pill needed!</p>
-  </section>
-
-  <!-- Streak -->
-  <section class="streak">
-    <span id="streak-text">🔥 0 day streak</span>
+  <!-- Today's dose -->
+  <section class="today">
+    <p id="status-line" class="today-q">—</p>
+    <button id="take-btn" class="dose-btn">Take today's pill</button>
+    <button id="undo-btn" class="undo-btn hidden">Undo — I haven't yet</button>
+    <p id="pillfree-note" class="pillfree-note hidden">Break day — no pill to take today.</p>
+    <p class="streak"><span id="streak-text">—</span></p>
   </section>
 
   <!-- Cycle status (shown when cycle tracking is on) -->
@@ -115,26 +107,26 @@
   </section>
 
   <!-- Install prompt (Android/Chrome) -->
-  <button id="install-btn" class="install-btn hidden">📲 Add to home screen</button>
+  <button id="install-btn" class="install-btn hidden">Add to home screen</button>
 
-  <!-- Calendar -->
-  <section class="cal-card">
-    <div class="cal-head">
-      <button id="cal-prev" class="icon-btn">‹</button>
-      <h3 id="cal-title">Month</h3>
-      <button id="cal-next" class="icon-btn">›</button>
+  <!-- Calendar — styled as a blister pack -->
+  <section class="pack">
+    <div class="pack-head">
+      <button id="cal-prev" class="nav-btn" aria-label="Previous month">‹</button>
+      <h2 id="cal-title">Month</h2>
+      <button id="cal-next" class="nav-btn" aria-label="Next month">›</button>
     </div>
     <div class="cal-weekdays">
-      <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+      <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
     </div>
     <div id="cal-grid" class="cal-grid"></div>
     <div class="cal-legend">
       <span><i class="dot taken"></i> Taken</span>
       <span><i class="dot missed"></i> Missed</span>
-      <span><i class="dot free"></i> Pill-free</span>
+      <span><i class="dot free"></i> Break</span>
       <span><i class="dot period"></i> Period</span>
     </div>
-    <p class="cal-hint">Tap a day to mark it as a <b>pill-free</b> (break) day 🌿</p>
+    <p class="cal-hint">Tap a day to mark it as a break day.</p>
   </section>
 
 </main>
@@ -142,34 +134,34 @@
 <!-- Settings modal -->
 <div id="settings-modal" class="modal hidden">
   <div class="modal-card">
-    <h3>Settings ⚙️</h3>
-    <label>Her name<input id="set-name" type="text" placeholder="e.g. Basia"></label>
+    <h2>Settings</h2>
+    <label>Her name<input id="set-name" type="text" placeholder="Basia"></label>
     <label>Pill time (when she takes it)<input id="set-time" type="time"></label>
     <label>Reminder times<input id="set-reminders" type="text" placeholder="22:00, 23:00, 09:00"></label>
     <label>Timezone<input id="set-tz" type="text" placeholder="Europe/Paris"></label>
     <label>Her WhatsApp number<input id="set-her" type="tel" placeholder="+33 6 12 34 56 78"></label>
     <label>Your WhatsApp number<input id="set-partner" type="tel" placeholder="+33 6 87 65 43 21"></label>
-    <p class="modal-hint">Reminders go to <b>both of you</b> at the times above (comma-separated, 24-hour clock) until she ticks it. A time earlier than the pill time is treated as the next morning. Numbers need the country code (e.g. +33…).</p>
+    <p class="modal-hint">Reminders go to both of you at the times above (comma-separated, 24-hour clock) until she takes it. A time earlier than the pill time counts as the next morning. Numbers need the country code, e.g. +33.</p>
 
     <div class="set-section">
-      <label class="row"><input id="set-alert-on" type="checkbox"> <span>Missed-pill alert just to you</span></label>
+      <label class="row"><input id="set-alert-on" type="checkbox"> <span>Extra alert, only to you</span></label>
       <label>Send it at<input id="set-alert-time" type="time"></label>
-      <p class="modal-hint">If she still hasn't taken her pill by this time (and it isn't a break day), you'll get a private "she hasn't taken it" alert — only to your number.</p>
+      <p class="modal-hint">If she hasn't taken her pill by this time on a pill day, you get a private heads-up — to your number only.</p>
     </div>
 
     <div class="set-section">
-      <label class="row"><input id="set-cycle-on" type="checkbox"> <span>Cycle / period tracking</span></label>
+      <label class="row"><input id="set-cycle-on" type="checkbox"> <span>Cycle and period tracking</span></label>
       <label>Pack start date (first active pill)<input id="set-cycle-start" type="date"></label>
       <div class="set-grid">
         <label>Active days<input id="set-cycle-active" type="number" min="1" max="40" placeholder="21"></label>
         <label>Break days<input id="set-cycle-break" type="number" min="0" max="14" placeholder="7"></label>
       </div>
-      <p class="modal-hint">The calendar will auto-mark break days (no pill 🌿) and show when her period is expected 🩸. Most combined pills are 21 active + 7 break; some are 24 + 4.</p>
+      <p class="modal-hint">The calendar marks break days and shows when her period is expected. Most combined pills run 21 active + 7 break; some are 24 + 4.</p>
     </div>
 
     <div class="modal-actions">
       <button id="set-cancel" class="ghost">Cancel</button>
-      <button id="set-save">Save</button>
+      <button id="set-save">Save changes</button>
     </div>
   </div>
 </div>

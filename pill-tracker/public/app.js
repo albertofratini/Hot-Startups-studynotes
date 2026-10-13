@@ -93,9 +93,9 @@ function renderCycle() {
   card.classList.remove('hidden');
   card.classList.toggle('period', info.isBreak);
   if (info.isBreak) {
-    $('cycle-text').textContent = `🩸 Break day ${info.dayInCycle - (Number(state.settings.cycle.activeDays))} · period expected · day ${info.dayInCycle} of ${info.cycleLength}`;
+    $('cycle-text').textContent = `Break day ${info.dayInCycle - (Number(state.settings.cycle.activeDays))} of ${Number(state.settings.cycle.breakDays)} — period expected`;
   } else {
-    $('cycle-text').textContent = `💊 Active pill day ${info.dayInCycle} of ${info.cycleLength} · ${info.activeLeft} day${info.activeLeft === 1 ? '' : 's'} until break`;
+    $('cycle-text').textContent = `Pill day ${info.dayInCycle} of ${info.cycleLength} — ${info.activeLeft} day${info.activeLeft === 1 ? '' : 's'} until your break`;
   }
 }
 
@@ -110,7 +110,7 @@ function renderStatus() {
   note.classList.toggle('hidden', !free);
 
   if (free) {
-    $('status-line').textContent = "Today is a break day 🌿";
+    $('status-line').textContent = "No pill today.";
     takeBtn.classList.add('hidden');
     undoBtn.classList.add('hidden');
     return;
@@ -118,14 +118,14 @@ function renderStatus() {
   takeBtn.classList.remove('hidden');
 
   if (taken) {
-    $('status-line').textContent = "All done for today! 🎉";
-    takeBtn.textContent = "Taken ✓";
+    $('status-line').textContent = "Taken for today.";
+    takeBtn.textContent = "Taken today ✓";
     takeBtn.classList.add('done');
     takeBtn.disabled = true;
     undoBtn.classList.remove('hidden');
   } else {
-    $('status-line').textContent = `Did you take your pill today?`;
-    takeBtn.textContent = "I took my pill 💊";
+    $('status-line').textContent = `Did you take it today?`;
+    takeBtn.textContent = "Take today's pill";
     takeBtn.classList.remove('done');
     takeBtn.disabled = false;
     undoBtn.classList.add('hidden');
@@ -136,11 +136,11 @@ function renderMascot() {
   const today = state.today;
   const taken = dose(today)?.taken;
   const free = isPillFree(today);
-  const name = state.settings.herName || 'cutie';
+  const name = state.settings.herName || 'love';
   let msg;
-  if (free) msg = `No pill today — enjoy your break, ${name}! 🌸`;
-  else if (taken) msg = `Yay! Proud of you, ${name} 💚 See you tomorrow!`;
-  else msg = `Hi ${name}! Don't forget your pill today 💊`;
+  if (free) msg = `Enjoy your break, ${name}.`;
+  else if (taken) msg = `Proud of you, ${name}. See you tomorrow.`;
+  else msg = `Hi ${name} — time for your pill.`;
   $('speech').textContent = msg;
 }
 
@@ -157,7 +157,9 @@ function renderStreak() {
     if (dose(cursor)?.taken) { streak++; cursor = shift(cursor, -1); }
     else break;
   }
-  $('streak-text').textContent = streak > 0 ? `🔥 ${streak} day streak` : `🌱 Start your streak today!`;
+  $('streak-text').textContent = streak > 0
+    ? `${streak} day${streak === 1 ? '' : 's'} in a row`
+    : `Your streak starts today`;
 }
 
 function shift(dateStr, days) {

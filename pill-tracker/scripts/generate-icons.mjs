@@ -48,9 +48,9 @@ function hex(c) { return [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 1
 
 function draw(size) {
   const buf = Buffer.alloc(size * size * 4);
-  const [br, bg, bb] = hex('#F06C8C');       // pink background
-  const [wr, wg, wb] = hex('#FFFFFF');       // pill body
-  const [lr, lg, lb] = hex('#FFB3C6');       // score line
+  const [br, bg, bb] = hex('#5E9B74');       // sage background
+  const [wr, wg, wb] = hex('#FBF4F1');       // blush-cream pill body
+  const [lr, lg, lb] = hex('#E0607F');       // rose score line
   const cx = size / 2, cy = size / 2;
   const r = size * 0.27;                      // pill radius
   for (let y = 0; y < size; y++) {
